@@ -1,13 +1,17 @@
-import requests, json, pandas, itertools
+import requests, json, itertools
 from multiprocessing import Process
 from collections import defaultdict
+import datetime
 
 ep = 'https://fantasy.premierleague.com/api/bootstrap-static/'
 r = requests.get(ep)
 j = json.loads(r.content)
 
+with open('old/FPL_DATA_'+datetime.datetime.now().strftime('%Y%m%d'),'w') as f:
+    f.write(json.dumps(j))
+
 #To reduce number of iterables
-MIN_PLAYER_PTS = 8
+MIN_PLAYER_PTS = 35
 
 gk =[[x['web_name'],x['total_points'],x['now_cost'] ] for x in j['elements'] if x['element_type']==1 and x['total_points']>=MIN_PLAYER_PTS]
 de = [[x['web_name'],x['total_points'],x['now_cost'] ] for x in j['elements'] if x['element_type']==2 and x['total_points']>=MIN_PLAYER_PTS]
